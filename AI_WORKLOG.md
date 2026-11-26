@@ -18,7 +18,7 @@ what instructions it got, and where it went wrong.
   bugs, assumptions, what was deliberately not done, what I should check).
   This made each step reviewable.
 - **Isolated sessions:** I split the work into separate sessions with a
-  clean context: setup + CI → UI → API → README. Shared rules lived in
+  clean context: setup + CI → UI → API → README → bonus pipeline. Shared rules lived in
   CLAUDE.md, so no chat history had to be carried over. Each UI/API
   session ran in its own git worktree branch, which I merged into `main`
   only after reviewing it.
@@ -121,7 +121,18 @@ text next to the screenshot.
   of silently choosing one.
 - **Behaviour differs between sessions:** in one session the agent logged
   in to Sauce Demo through the MCP browser, in another it refused to type
-  even the public demo password. I did those logins myself.
+  even the public demo password. I did those logins myself. The same with
+  `git push`: once the agent refused it because of the CLAUDE.md rule, and
+  in a later session it pushed when my message contained the command.
+- **Bonus pipeline — green is not the same as good:** all three generated
+  specs passed on the first run, but in two of them the model weakened
+  the assertions (`toContainText` instead of an exact `toHaveText`, and
+  `expect.poll` over `allTextContents()` instead of a web-first
+  `toHaveText(array)`), and it tagged all three as `@smoke` although they
+  duplicate hand-written tests. Only reading the code showed this. I fixed
+  the specs by hand (diffs are in `tools/generate-test/results/`) and then
+  fixed the cause in the generator prompt, so future runs don't repeat the
+  tagging mistake.
 - **The reviewer AI was wrong too:** the second chat advised pinning
   TypeScript to 5.x. TypeScript 7 (the native Go port) is the current
   stable release and type-checks this project fine, so I kept 7 after

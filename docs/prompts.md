@@ -403,3 +403,98 @@ npx playwright test --repeat-each=3 --workers=2.
 Report each checklist item as OK / MISSING / PROBLEM with the file and
 line. Then the REPORT in the format defined in CLAUDE.md.
 ```
+
+---
+
+## Session 5 — Bonus: text test case to Playwright test pipeline
+
+### 5.1 Pipeline and three examples
+
+```
+Read CLAUDE.md first and follow it for the whole session.
+
+Bonus task: a pipeline that turns a text test case into a runnable
+Playwright test. Build it in tools/generate-test/.
+
+Design:
+- Input: a .md file in tools/generate-test/cases/ with a title, steps
+  and expected result.
+- generate.ts (run with `npx tsx tools/generate-test/generate.ts
+  <case.md>`): builds a prompt from the test case + the rules from
+  CLAUDE.md + the public methods of pages/*.ts + fixtures/index.ts,
+  and calls Claude Code headless: `claude -p` with the prompt on stdin
+  and `--output-format text`. No tools for the model: it must return
+  only the TypeScript code of one spec file. This runs on Windows —
+  spawn the process so it works there.
+- The script strips code fences, writes the spec to
+  tests/ui/generated/<case-name>.spec.ts, runs only that file with
+  `npx playwright test <file> --project=ui`, and saves
+  tools/generate-test/results/<case-name>.md with: input, prompt
+  summary, generated code, run result (pass/fail + error), and an
+  empty "Manual fixes" section for me.
+- No automatic retry or self-fixing. I fix failures by hand.
+- Generated tests get the tag @generated.
+
+Then write 3 example cases in tools/generate-test/cases/: one simple
+(login with standard_user lands on the catalog), one medium (sorting
+by price high to low), one harder (checkout of two items with correct
+totals). Run the pipeline on all three and show me the results.
+
+Add tools/generate-test/README.md: how to run, how it works, its
+limits. Add tsx as a devDependency if needed.
+
+Do not fix generated specs yourself.
+Commit ONLY the pipeline code, cases and README now, as
+"feat(bonus): text test case to Playwright test pipeline".
+Do NOT commit tests/ui/generated/ or results/ yet — I will commit
+them after my manual fixes, so CI never runs a broken generated test.
+
+Finish with the REPORT in the format defined in CLAUDE.md.
+```
+
+### 5.2 Recording the manual fixes
+
+All three generated specs passed on the first run. I reviewed them and
+fixed them by hand in the editor, then sent:
+
+```
+I fixed the three generated specs by hand. Run
+`npx playwright test tests/ui/generated --project=ui` and `npx tsc --noEmit`.
+In each tools/generate-test/results/*.md fill "Manual fixes" with the diff
+between the generated version (saved in that file) and the current spec,
+and one line on why each change was made:
+- checkout: toContainText -> exact toHaveText for item total and total
+  (toContainText would also pass for a wrong longer value); the tax
+  regex replaced with a simple format check, since "> 0" is asserted
+  separately; removed @smoke (duplicates the hand-written smoke test)
+- sorting: expect.poll over allTextContents() -> web-first
+  toHaveText(array) on the locator, as CLAUDE.md requires; removed @smoke
+- login: removed @smoke only
+Add a short "Summary" at the top of tools/generate-test/README.md:
+all 3 specs passed on the first run, but 2 of 3 had weaker assertions
+than our hand-written tests, and all 3 were tagged @smoke as duplicates.
+Then commit tests/ui/generated/ and results/ as
+"feat(bonus): generated specs with manual fixes".
+Finish with the REPORT in the format defined in CLAUDE.md.
+```
+
+### 5.3 Fixing the cause in the generator
+
+```
+Close the gaps from your report:
+1. In generate.ts, change the prompt so generated specs are tagged
+   ['@generated', '@ui'] only (never @smoke or @negative — generated
+   specs duplicate hand-written ones). Do not re-run the pipeline.
+2. In CLAUDE.md "Tags", add: "Generated specs in tests/ui/generated/
+   are tagged @generated @ui instead."
+3. Remove the `// FIX:` comments from the three generated specs and add
+   the missing final newlines. Change nothing else in them.
+4. In the root README.md, add a short "Bonus: test case to Playwright
+   test pipeline" section linking to tools/generate-test/README.md,
+   and update the test count (3 more UI tests, tagged @generated).
+5. In tools/generate-test/README.md Summary, add one line: the @smoke
+   tagging was fixed in the generator prompt, not only in the output.
+Run npx tsc --noEmit and npx playwright test (all).
+Commit as "chore(bonus): generator tags, README link".
+Finish with the REPORT in the format defined in CLAUDE.md.
+```
