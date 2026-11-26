@@ -118,7 +118,7 @@ Each API test creates its own booking with a unique first name (`Date.now()`); n
 ## Quality checks
 
 - Every key assertion was temporarily broken (wrong expected value) to prove it can fail, then restored.
-- New specs were run with `--repeat-each=5` to check for flakiness.
+- Flakiness: UI specs were run with `--repeat-each=5`; API specs were run 3 times in a row on the shared instance.
 - `npx tsc --noEmit` runs locally and in CI before the tests.
 
 ## What is deliberately NOT covered, and why
