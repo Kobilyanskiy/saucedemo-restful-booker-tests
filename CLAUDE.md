@@ -120,7 +120,7 @@ CI: GitHub Actions on push, HTML report uploaded as an artifact.
 ## Files you must not edit
 - AI_WORKLOG.md — I write it myself.
 - README.md "Found bugs" section — propose changes, I approve them.
-- Do not commit or push. I make the commits.
+- Do not commit unless my prompt explicitly asks. Never push.
 
 ## Before you finish a task
 - Run the tests you created or changed (chromium for UI).
