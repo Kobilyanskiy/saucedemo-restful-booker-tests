@@ -1,6 +1,24 @@
 import { test, expect } from '../../fixtures';
-import { standardUser } from '../../data/users';
+import { lockedOutUser, standardUser, type User } from '../../data/users';
 import { messages } from '../../data/messages';
+
+const invalidLogins: { case: string; user: User; error: string }[] = [
+  {
+    case: 'a wrong password',
+    user: { username: standardUser.username, password: 'wrong_password' },
+    error: messages.login.wrongCredentials,
+  },
+  {
+    case: 'an empty username',
+    user: { username: '', password: standardUser.password },
+    error: messages.login.usernameRequired,
+  },
+  {
+    case: 'an empty password',
+    user: { username: standardUser.username, password: '' },
+    error: messages.login.passwordRequired,
+  },
+];
 
 test.describe('Login', () => {
   // These tests are about login itself, so they start without the saved session.
@@ -40,4 +58,28 @@ test.describe('Login', () => {
       await expect(inventoryPage.productCards).toHaveCount(0);
     },
   );
+
+  test(
+    'locked-out user cannot log in and sees the lockout message',
+    { tag: ['@negative', '@ui'] },
+    async ({ page, loginPage }) => {
+      await loginPage.login(lockedOutUser);
+
+      await expect(loginPage.errorMessage).toHaveText(messages.login.lockedOut);
+      await expect(page).toHaveURL('/');
+    },
+  );
+
+  for (const { case: caseName, user, error } of invalidLogins) {
+    test(
+      `user cannot log in with ${caseName}`,
+      { tag: ['@negative', '@ui'] },
+      async ({ page, loginPage }) => {
+        await loginPage.login(user);
+
+        await expect(loginPage.errorMessage).toHaveText(error);
+        await expect(page).toHaveURL('/');
+      },
+    );
+  }
 });

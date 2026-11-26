@@ -11,5 +11,11 @@ export const standardUser: User = {
   password: PASSWORD,
 };
 
+// Negative tests only.
+export const lockedOutUser: User = {
+  username: 'locked_out_user',
+  password: PASSWORD,
+};
+
 // Written by tests/ui/auth.setup.ts, used as storageState by the `ui` project.
 export const STANDARD_USER_STORAGE_STATE = '.auth/standard_user.json';

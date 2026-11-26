@@ -54,4 +54,38 @@ test.describe('Checkout', () => {
       await expect(header.cartBadge).toHaveCount(0);
     },
   );
+
+  test(
+    'user cannot continue checkout without first name, last name and postal code',
+    { tag: ['@negative', '@ui'] },
+    async ({ page, inventoryPage, header, cartPage, checkoutInformationPage }) => {
+      await inventoryPage.addToCart(products.backpack);
+      await header.openCart();
+      await cartPage.checkout();
+      await expect(page).toHaveURL('/checkout-step-one.html');
+
+      // 0 fields filled
+      await checkoutInformationPage.continue();
+      await expect(checkoutInformationPage.errorMessage).toHaveText(
+        messages.checkout.firstNameRequired,
+      );
+      await expect(page).toHaveURL('/checkout-step-one.html');
+
+      // 1 field filled
+      await checkoutInformationPage.fill({ firstName: checkoutInfo.firstName });
+      await checkoutInformationPage.continue();
+      await expect(checkoutInformationPage.errorMessage).toHaveText(
+        messages.checkout.lastNameRequired,
+      );
+      await expect(page).toHaveURL('/checkout-step-one.html');
+
+      // 2 fields filled
+      await checkoutInformationPage.fill({ lastName: checkoutInfo.lastName });
+      await checkoutInformationPage.continue();
+      await expect(checkoutInformationPage.errorMessage).toHaveText(
+        messages.checkout.postalCodeRequired,
+      );
+      await expect(page).toHaveURL('/checkout-step-one.html');
+    },
+  );
 });

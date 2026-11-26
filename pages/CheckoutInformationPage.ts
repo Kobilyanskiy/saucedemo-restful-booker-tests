@@ -17,10 +17,11 @@ export class CheckoutInformationPage {
     this.errorMessage = page.getByRole('alert');
   }
 
-  async fill(info: CheckoutInfo): Promise<void> {
-    await this.firstNameInput.fill(info.firstName);
-    await this.lastNameInput.fill(info.lastName);
-    await this.postalCodeInput.fill(info.postalCode);
+  /** Fills only the fields that are given, so validation of missing fields can be tested. */
+  async fill(info: Partial<CheckoutInfo>): Promise<void> {
+    if (info.firstName !== undefined) await this.firstNameInput.fill(info.firstName);
+    if (info.lastName !== undefined) await this.lastNameInput.fill(info.lastName);
+    if (info.postalCode !== undefined) await this.postalCodeInput.fill(info.postalCode);
   }
 
   async continue(): Promise<void> {

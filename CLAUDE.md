@@ -43,8 +43,12 @@ CI: GitHub Actions on push, HTML report uploaded as an artifact.
 - utils/             Small pure helpers shared by specs (e.g. price parsing
                      and formatting in cents)
 - .github/workflows/ playwright.yml
-- playwright.config.ts  Projects: `ui` (chromium, baseURL saucedemo)
-                        and `api` (no browser, baseURL restful-booker)
+- playwright.config.ts  Projects: `ui-setup` (runs tests/ui/auth.setup.ts:
+                        UI login as standard_user, saves storageState to
+                        .auth/standard_user.json), `ui` (chromium, baseURL
+                        saucedemo, depends on ui-setup, uses that
+                        storageState) and `api` (no browser, baseURL
+                        restful-booker)
 
 ## Writing UI tests (Sauce Demo)
 - testIdAttribute is set to `data-test` in the config. Sauce Demo has
