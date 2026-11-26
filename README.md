@@ -74,8 +74,9 @@ playwright.config.ts Projects: ui-setup, ui (Chromium, saucedemo), api (no brows
 
 ## What is covered
 
-19 tests in total: 1 setup step, 14 UI tests, 4 API tests. Tags: `@smoke` (critical path),
-`@negative`, plus `@ui` / `@api`.
+22 tests in total: 1 setup step, 17 UI tests (14 hand-written + 3 generated), 4 API tests.
+Tags: `@smoke` (critical path), `@negative`, plus `@ui` / `@api`. The 3 generated UI tests in
+`tests/ui/generated/` are tagged `@generated` `@ui` only (see [Bonus](#bonus-test-case-to-playwright-test-pipeline)).
 UI has 6 positive and 3 negative scenarios; sorting (4 options) and invalid login (3 inputs) are
 data-driven, so they are reported as 9 + 5 test cases.
 
@@ -279,6 +280,15 @@ intentionally defective Sauce Demo accounts, so their bugs are planted defects o
 
 - `POST /booking` returns 200 instead of 201. This matches the API docs; the tests assert 200.
 - A missing or invalid token on `PUT` / `PATCH` / `DELETE` returns 403 Forbidden instead of 401. The tests assert 403.
+
+## Bonus: test case to Playwright test pipeline
+
+[`tools/generate-test/`](tools/generate-test/README.md) turns a Markdown test case into a Playwright
+spec using Claude Code headless (`claude -p`), runs it once and writes a report. There is no retry or
+self-fixing: failures and weak assertions are fixed by hand. The 3 example cases (login, sorting by
+price high to low, two-item checkout) produced the specs in `tests/ui/generated/`, tagged
+`@generated` `@ui`. See [tools/generate-test/README.md](tools/generate-test/README.md) for how to run
+it, how it works and its limits.
 
 ## AI work log
 

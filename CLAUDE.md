@@ -94,6 +94,7 @@ CI: GitHub Actions on push, HTML report uploaded as an artifact.
 ## Tags
 - Every test has a tag: @smoke (critical path) or @negative.
   Also @ui or @api.
+  Generated specs in tests/ui/generated/ are tagged @generated @ui instead.
 - Test names describe behaviour: "user can sort products by price low
   to high", not "sorting test 2".
 

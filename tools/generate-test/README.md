@@ -11,6 +11,8 @@ On the three example cases, all 3 generated specs passed on the first run, but
 web-first `toHaveText(array)`), and all 3 were tagged `@smoke` although they
 duplicate existing smoke tests. The fixes are recorded in "Manual fixes" in
 each `results/<case>.md`.
+The `@smoke` tagging was then fixed in the generator prompt too, not only in the output:
+generated specs are now always tagged `@generated` `@ui`.
 
 ## How to run
 
@@ -43,7 +45,7 @@ spec name. Use the exact UI texts (product names, sort labels).
 
 1. **Prompt.** `generate.ts` builds one prompt from:
    - output rules (one spec file only, import paths from `tests/ui/generated/`,
-     tags `@generated` + `@ui` + `@smoke`/`@negative`, use only the listed API);
+     tags `@generated` + `@ui` only, never `@smoke`/`@negative`, use only the listed API);
    - the sections *Writing UI tests*, *Test data and secrets* and *Tags* of `CLAUDE.md`;
    - the public API of every `pages/*.ts` (class, `readonly` locators, method
      signatures and their comments, no method bodies);

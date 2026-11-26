@@ -7,7 +7,7 @@ import { toCents, formatCents } from '../../../utils/price';
 test.describe('Checkout of two items shows correct item total, tax and total', () => {
   test(
     'user can check out two items and sees correct item total, tax and total',
-    { tag: ['@generated', '@ui'] }, // FIX: removed @smoke — duplicates the hand-written checkout smoke test
+    { tag: ['@generated', '@ui'] },
     async ({
       page,
       header,
@@ -49,19 +49,16 @@ test.describe('Checkout of two items shows correct item total, tax and total', (
       ]);
 
       // Item total equals the sum of the catalog prices.
-      // FIX: exact match instead of toContainText
       await expect(checkoutOverviewPage.itemTotal).toHaveText(
         `Item total: ${formatCents(expectedItemTotalCents)}`,
       );
 
       // Step 5: tax is a positive dollar amount.
-      // FIX: simple format check; "greater than zero" is asserted below
       await expect(checkoutOverviewPage.tax).toHaveText(/^Tax: \$\d+\.\d{2}$/);
       const taxCents = toCents(await checkoutOverviewPage.tax.innerText());
       expect(taxCents).toBeGreaterThan(0);
 
       // Total equals item total + tax.
-      // FIX: exact match instead of toContainText
       await expect(checkoutOverviewPage.total).toHaveText(
         `Total: ${formatCents(expectedItemTotalCents + taxCents)}`,
       );

@@ -157,8 +157,9 @@ Output rules (strict):
   with \`await inventoryPage.goto()\`. Only a test about login itself starts logged out, with
   \`test.use({ storageState: { cookies: [], origins: [] } })\` and \`await loginPage.goto()\`.
 - Wrap the test(s) in test.describe('${tc.title.replace(/'/g, "\\'")}', ...).
-- Every test has tags: '@generated', '@ui' and exactly one of '@smoke' (positive flow) or '@negative'.
-  Example: test('user can ...', { tag: ['@generated', '@smoke', '@ui'] }, async ({ ... }) => { ... });
+- Every test has exactly the tags ['@generated', '@ui']. Never add '@smoke' or '@negative': generated
+  specs duplicate hand-written ones, which already carry those tags.
+  Example: test('user can ...', { tag: ['@generated', '@ui'] }, async ({ ... }) => { ... });
 - Test names describe behaviour ("user can sort products by price high to low").
 - Never use page.waitForTimeout(), test.skip/fixme/fail, retries or custom timeouts.
 
@@ -284,7 +285,7 @@ ${r.tc.markdown.replace(/^(#+)/gm, '##$1')}
 Sent to \`claude -p --output-format text --tools "" --strict-mcp-config\` on stdin, ${r.prompt.text.length} characters in total:
 
 ${r.prompt.parts.map((p) => `- ${p.label} (${p.chars} chars)`).join('\n')}
-- Output rules: one spec file only, imports from \`../../../\`, tags \`@generated\` + \`@ui\` + \`@smoke\`/\`@negative\`, listed API only
+- Output rules: one spec file only, imports from \`../../../\`, tags \`@generated\` + \`@ui\` only, listed API only
 
 ## Generated code
 

@@ -1,10 +1,10 @@
 import { test, expect } from '../../../fixtures';
-import { toCents, formatCents } from '../../../utils/price'; // FIX: formatCents for the expected texts
+import { toCents, formatCents } from '../../../utils/price';
 
 test.describe('Sort products by price high to low', () => {
   test(
     'user can sort products by price high to low',
-    { tag: ['@generated', '@ui'] }, // FIX: removed @smoke — duplicates the hand-written sorting test
+    { tag: ['@generated', '@ui'] },
     async ({ inventoryPage }) => {
       await inventoryPage.goto();
       await expect(inventoryPage.title).toBeVisible();
@@ -28,7 +28,6 @@ test.describe('Sort products by price high to low', () => {
       await expect(inventoryPage.activeSortOption).toHaveText('Price (high to low)');
 
       // Expected: the whole list of prices matches the sorted copy.
-      // FIX: web-first toHaveText on the locator instead of expect.poll over allTextContents()
       await expect(inventoryPage.productPrices).toHaveText(expectedHighToLow.map(formatCents));
     },
   );
