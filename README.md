@@ -76,6 +76,8 @@ playwright.config.ts Projects: ui-setup, ui (Chromium, saucedemo), api (no brows
 
 19 tests in total: 1 setup step, 14 UI tests, 4 API tests. Tags: `@smoke` (critical path),
 `@negative`, plus `@ui` / `@api`.
+UI has 6 positive and 3 negative scenarios; sorting (4 options) and invalid login (3 inputs) are
+data-driven, so they are reported as 9 + 5 test cases.
 
 ### UI — Sauce Demo (Chromium, `standard_user` unless stated)
 
@@ -119,6 +121,7 @@ Each API test creates its own booking with a unique first name (`Date.now()`); n
 
 - Every key assertion was temporarily broken (wrong expected value) to prove it can fail, then restored.
 - Flakiness: UI specs were run with `--repeat-each=5`; API specs were run 3 times in a row on the shared instance.
+  Final review run `--repeat-each=3 --workers=2`: 55 passed, 0 flaky.
 - `npx tsc --noEmit` runs locally and in CI before the tests.
 
 ## What is deliberately NOT covered, and why
