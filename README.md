@@ -63,12 +63,14 @@ Download and unzip `playwright-report`, then open it with `npx playwright show-r
 
 ```
 tests/ui/            UI specs, one file per feature (+ auth.setup.ts)
+tests/ui/generated/  Generated specs from the bonus pipeline, tagged @generated @ui
 tests/api/           API specs using the `request` fixture
 pages/               Page objects, one class per page (+ HeaderComponent)
 fixtures/            index.ts: page-object fixtures; api.ts: `authToken` fixture and auth header helper
 data/                Static test data: users, checkout info, products, UI messages, booking payloads
 utils/               price.ts: price parsing/formatting in integer cents
 docs/bugs/           Screenshots used as bug evidence
+tools/generate-test/ Bonus pipeline: text test case -> Playwright spec (cases/, results/, generate.ts)
 playwright.config.ts Projects: ui-setup, ui (Chromium, saucedemo), api (no browser, restful-booker)
 ```
 
