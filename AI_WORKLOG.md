@@ -34,24 +34,24 @@ what instructions it got, and where it went wrong.
 
 ## Key prompts
 
-Full prompts are in [docs/prompts.md](docs/prompts.md). The most important
-ones in short:
+Full prompts, word for word, are in [docs/prompts.md](docs/prompts.md).
+The most important ones, summarised:
 
-1. **Setup:** "Set up the project skeleton according to CLAUDE.md … do NOT
-   use `npm init playwright` … two projects `ui` and `api` … retries: 0 …
-   do not write tests yet."
-2. **UI exploration:** "Use the Playwright MCP browser … read the
-   accessibility snapshot of each page … propose a test plan as a table
-   with assertions and why they prove the behaviour. STOP after the plan."
-3. **Plan approval with changes:** "Do not use the session cookie, use a
-   setup project with storageState … do NOT assert the 8% tax rate …
-   merge tests 4 and 5 … don't hard-code the product id."
-4. **Proving tests can fail:** "For each spec make ONE temporary change to
-   the expected value, confirm it fails, revert, verify by hash."
-5. **API decisions:** "Never assert a value only because the API currently
-   returns it when we classified that behaviour as a bug." Bugs are marked
-   with annotations, and the 500-instead-of-400 bug got a `test.fail()`
-   test.
+1. **Setup (1.1):** build the skeleton from CLAUDE.md without
+   `npm init playwright`, two projects (`ui`, `api`), `retries: 0`, no
+   tests yet.
+2. **UI exploration (2.1):** walk through the site with the Playwright MCP
+   browser, read the accessibility snapshots, propose a test plan with an
+   explanation of why each assertion proves the behaviour, then stop.
+3. **Plan approval with changes (2.2):** a setup project with
+   `storageState` instead of the session cookie, no assertion on the 8%
+   tax rate, merged cart tests, no hard-coded product id.
+4. **Proving tests can fail (2.3, 2.4, 3.2):** one temporary wrong
+   expectation per spec, confirm the failure, revert, verify by hash.
+5. **API decisions (3.2):** the rule quoted exactly: "never assert a value
+   only because the API currently returns it when we classified that
+   behaviour as a bug." Bugs are marked with annotations, and the
+   500-instead-of-400 bug got a `test.fail()` test.
 
 ## Where the agent went wrong and how I noticed
 
