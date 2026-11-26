@@ -3,6 +3,15 @@
 A small pipeline that turns a written test case (`cases/*.md`) into a runnable
 Playwright spec for the Sauce Demo UI suite, runs it once and writes a report.
 
+## Summary
+
+On the three example cases, all 3 generated specs passed on the first run, but
+2 of 3 (checkout, sorting) had weaker assertions than our hand-written tests
+(`toContainText` instead of exact `toHaveText`, `expect.poll` instead of a
+web-first `toHaveText(array)`), and all 3 were tagged `@smoke` although they
+duplicate existing smoke tests. The fixes are recorded in "Manual fixes" in
+each `results/<case>.md`.
+
 ## How to run
 
 Requirements: dependencies installed (`npm ci`), Chromium installed, and the
