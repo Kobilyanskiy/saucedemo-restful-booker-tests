@@ -40,6 +40,8 @@ CI: GitHub Actions on push, HTML report uploaded as an artifact.
 - pages/             Page objects (one class per page)
 - fixtures/          Custom fixtures (logged-in page, API client, auth token)
 - data/              Static test data (users, checkout info, booking payloads)
+- utils/             Small pure helpers shared by specs (e.g. price parsing
+                     and formatting in cents)
 - .github/workflows/ playwright.yml
 - playwright.config.ts  Projects: `ui` (chromium, baseURL saucedemo)
                         and `api` (no browser, baseURL restful-booker)

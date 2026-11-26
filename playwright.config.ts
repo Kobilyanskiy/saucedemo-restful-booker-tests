@@ -1,4 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
+import { STANDARD_USER_STORAGE_STATE } from './data/users';
 
 export default defineConfig({
   forbidOnly: !!process.env.CI,
@@ -11,11 +12,23 @@ export default defineConfig({
   },
   projects: [
     {
-      name: 'ui',
+      // Logs in once through the UI and saves the session for the `ui` project.
+      name: 'ui-setup',
       testDir: './tests/ui',
+      testMatch: /auth\.setup\.ts$/,
       use: {
         ...devices['Desktop Chrome'],
         baseURL: 'https://www.saucedemo.com',
+      },
+    },
+    {
+      name: 'ui',
+      testDir: './tests/ui',
+      dependencies: ['ui-setup'],
+      use: {
+        ...devices['Desktop Chrome'],
+        baseURL: 'https://www.saucedemo.com',
+        storageState: STANDARD_USER_STORAGE_STATE,
       },
     },
     {
